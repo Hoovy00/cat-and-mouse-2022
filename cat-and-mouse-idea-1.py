@@ -163,29 +163,23 @@ class Board(object):
     line_WIDTH = 5
     COLUMNS = 14
     ROWS = 11
+    GRID_HEIGHT = int(Screen.HEIGHT/ROWS)
+    GRID_WIDTH = int(Screen.WIDTH/COLUMNS)
     def __init__(self,screen):
         self.win = screen.win
+
     #draws the game board
     def draw(self):
-        W = int(Screen.WIDTH/Board.COLUMNS)
-        H = int(Screen.HEIGHT/Board.ROWS)
-        pygame.draw.rect(self.win, (COLOR_BACKGROUND), (0,0, W*Board.COLUMNS, H*Board.ROWS))
+        pygame.draw.rect(self.win, (COLOR_BACKGROUND), (0,0, Board.GRID_WIDTH*Board.COLUMNS, Board.GRID_HEIGHT*Board.ROWS))
         #draws the vertical lines
-        def draw_vertical_lines(num):
-            for i in range(num):                
-                pygame.draw.rect(self.win, (COLOR_BLACK), (W * i,0, Board.line_WIDTH, Screen.HEIGHT))
-        draw_vertical_lines(15)
-        #draws the horizontal lines
-        def draw_horizontal_lines(num):
-            for i in range(num):
-                pygame.draw.rect(self.win, (COLOR_BLACK), (0,H*i, Screen.WIDTH, Board.line_WIDTH))
-        draw_horizontal_lines(12)
+        self.draw_vertical_lines(15)
+        self.draw_horizontal_lines(12)
         #draws the walls
         def draw_walls(walls):
-            width = W - Board.line_WIDTH
-            height = H - Board.line_WIDTH
+            width = Board.GRID_WIDTH - Board.line_WIDTH
+            height = Board.GRID_HEIGHT - Board.line_WIDTH
             for x,y in walls:
-                pygame.draw.rect(self.win, (COLOR_BLUE), (W*x + Board.line_WIDTH, H*y + Board.line_WIDTH, width, height))
+                pygame.draw.rect(self.win, (COLOR_BLUE), (Board.GRID_WIDTH*x + Board.line_WIDTH, Board.GRID_HEIGHT*y + Board.line_WIDTH, width, height))
         walls = [
             (0, 1), (6, 0), (7, 0), (13, 0),
             (3, 1), (4, 1), (9, 1), (10, 1),
@@ -202,57 +196,50 @@ class Board(object):
         draw_walls(walls)
         
         # the circles on the top of the screen
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [40, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [120, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [200, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [280, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [360, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [440, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [520, 5], 20, 20)  
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [600, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [680, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [760, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [840, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [920, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [1000, 5], 20, 20)
-        pygame.draw.circle(self.win, COLOR_GREEN,
-            [1080, 5], 20, 20)
+        def draw_green_circle_on_top_of_the_screen(x):
+            pygame.draw.circle(self.win, COLOR_GREEN,
+                [x, 5], 20, 20)
+
+        draw_green_circle_on_top_of_the_screen(40)
+        draw_green_circle_on_top_of_the_screen(40 + 80)
+        draw_green_circle_on_top_of_the_screen(40 + (80*2))
+        draw_green_circle_on_top_of_the_screen(40 + (80*3))
+        draw_green_circle_on_top_of_the_screen(40 + (80*4))
+        draw_green_circle_on_top_of_the_screen(40 + (80*5))
+        draw_green_circle_on_top_of_the_screen(40 + (80*6))
+        draw_green_circle_on_top_of_the_screen(40 + (80*7))
+        draw_green_circle_on_top_of_the_screen(40 + (80*8))
+        draw_green_circle_on_top_of_the_screen(40 + (80*9))
+        draw_green_circle_on_top_of_the_screen(40 + (80*10))
+        draw_green_circle_on_top_of_the_screen(40 + (80*11))
+        draw_green_circle_on_top_of_the_screen(40 + (80*12))
+        draw_green_circle_on_top_of_the_screen(40 + (80*13))
+
         # the circles on the sides
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 40], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 120], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 200], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 280], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 360], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 440], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 520], 20, 20) 
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 600], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 680], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 760], 20, 20)
-        pygame.draw.circle(self.win, COLOR_RED,
-            [1120, 840], 20, 20)
+        def draw_red_circle_on_side_of_the_screen(y):
+            pygame.draw.circle(self.win, COLOR_RED,
+                [1120, y], 20, 20)
+
+        draw_red_circle_on_side_of_the_screen(40)
+        draw_red_circle_on_side_of_the_screen(40 + 80)
+        draw_red_circle_on_side_of_the_screen(40 + (80*2))
+        draw_red_circle_on_side_of_the_screen(40 + (80*3))
+        draw_red_circle_on_side_of_the_screen(40 + (80*4))
+        draw_red_circle_on_side_of_the_screen(40 + (80*5))
+        draw_red_circle_on_side_of_the_screen(40 + (80*6))
+        draw_red_circle_on_side_of_the_screen(40 + (80*7))
+        draw_red_circle_on_side_of_the_screen(40 + (80*8))
+        draw_red_circle_on_side_of_the_screen(40 + (80*9))
+        draw_red_circle_on_side_of_the_screen(40 + (80*10))
+
+    def draw_horizontal_lines(self,  num):
+        #draws the horizontal lines
+        for i in range(num):
+            pygame.draw.rect(self.win, (COLOR_BLACK), (0,Board.GRID_HEIGHT*i, Screen.WIDTH, Board.line_WIDTH))
+
+    def draw_vertical_lines(self, num):
+        for i in range(num):                
+            pygame.draw.rect(self.win, (COLOR_BLACK), (Board.GRID_WIDTH * i,0, Board.line_WIDTH, Screen.HEIGHT))
 
      
 #used to call the classes
