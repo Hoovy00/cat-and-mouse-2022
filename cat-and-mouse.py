@@ -4,8 +4,7 @@ import pygame.freetype
 class Game(object):
     def __init__(self):
         pygame.init()
-
-        self.GAME_FONT = pygame.freetype.Font("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Italic.otf", 24)    
+        self.GAME_FONT = pygame.freetype.Font("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Italic.otf", 24)
     
     def play(self):    
         run = True
@@ -23,6 +22,7 @@ class Game(object):
             board.draw()
             mouse.draw()
             cat.draw()
+
             def draw_vertical_score_indicator_background():
                 """draws upper numbers"""
                 self.GAME_FONT.render_to(screen.win, (35, 2), "1", (0, 0, 0))
@@ -87,7 +87,6 @@ COLOR_RED = (178,0,0)
 COLOR_GREEN = (0,178,0)
 COLOR_BACKGROUND = (161, 133, 106)
 
-
 class Mouse(object):
     """mouse player functions"""
     WIDTH = Player.WIDTH
@@ -127,9 +126,6 @@ class Mouse(object):
     def draw(self):
         pygame.draw.rect(self.win, (COLOR_WHITE), (self.x, self.y, Mouse.WIDTH, Mouse.HEIGHT))
 
-
-
-
 class Cat(object):
     """cat player functions"""
     WIDTH = Player.WIDTH
@@ -157,7 +153,6 @@ class Cat(object):
 
     def draw(self):
         pygame.draw.rect(self.win, (COLOR_WHITE), (self.x, self.y, Cat.WIDTH, Cat.HEIGHT))
-
      
     # returns Cat's x and y
     def location(self):
@@ -206,7 +201,7 @@ class Board(object):
         ]
         draw_walls(walls)
         
-        # the circles on the sides
+        # the circles on the top of the screen
         pygame.draw.circle(self.win, COLOR_GREEN,
             [40, 5], 20, 20)
         pygame.draw.circle(self.win, COLOR_GREEN,
@@ -235,7 +230,7 @@ class Board(object):
             [1000, 5], 20, 20)
         pygame.draw.circle(self.win, COLOR_GREEN,
             [1080, 5], 20, 20)
-  
+        # the circles on the sides
         pygame.draw.circle(self.win, COLOR_RED,
             [1120, 40], 20, 20)
         pygame.draw.circle(self.win, COLOR_RED,
