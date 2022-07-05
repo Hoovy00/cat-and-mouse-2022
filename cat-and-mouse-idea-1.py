@@ -1,6 +1,70 @@
 import pygame
 import pygame.freetype
 
+class Game(object):
+    def __init__(self):
+        pygame.init()
+
+        self.GAME_FONT = pygame.freetype.Font("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Italic.otf", 24)    
+    
+    def play(self):    
+        run = True
+        #main game loop
+        while run:
+            pygame.time.delay(15)
+            
+            #stops the program when you hit the X button
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+
+            cat.movement()
+            mouse.movement(cat)
+            board.draw()
+            mouse.draw()
+            cat.draw()
+            def draw_vertical_score_indicator_background():
+                """draws upper numbers"""
+                self.GAME_FONT.render_to(screen.win, (35, 2), "1", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (115, 2), "2", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (195, 2), "3", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (275, 2), "4", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (355, 2), "5", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (435, 2), "6", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (515, 2), "7", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (595, 2), "8", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (675, 2), "9", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (750, 2), "10", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (830, 2), "11", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (910, 2), "12", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (990, 2), "13", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1069, 2), "14", (0, 0, 0))
+
+            def draw_horizontal_score_indicator_background():
+                """draws vertical numbers"""
+                self.GAME_FONT.render_to(screen.win, (1107, 30), "1", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 110), "2", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 190), "3", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 270), "4", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 350), "5", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 430), "6", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 510), "7", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 590), "8", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1107, 670), "9", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1100, 750), "10", (0, 0, 0))
+                self.GAME_FONT.render_to(screen.win, (1100, 830), "11", (0, 0, 0))
+
+            draw_vertical_score_indicator_background()
+            draw_horizontal_score_indicator_background()
+
+            #draws the indicators of starting points
+            self.GAME_FONT.render_to(screen.win, (330, 190), "Mouse", (0, 0, 0))
+            self.GAME_FONT.render_to(screen.win, (660, 750), "Cat", (0, 0, 0))
+
+            pygame.display.update()
+
+        pygame.quit()
+
 class Screen(object):
     def __init__(self):
         self.win = pygame.display.set_mode((Screen.WIDTH, Screen.HEIGHT))
@@ -23,7 +87,7 @@ COLOR_RED = (178,0,0)
 COLOR_GREEN = (0,178,0)
 COLOR_BACKGROUND = (161, 133, 106)
 
-run = True
+
 class Mouse(object):
     """mouse player functions"""
     WIDTH = Player.WIDTH
@@ -201,59 +265,5 @@ screen = Screen()
 cat = Cat(screen)
 mouse = Mouse(screen)
 board = Board(screen)
-
-
-#main game loop
-while run:
-    pygame.time.delay(15)
-
-    pygame.init()
-
-    GAME_FONT = pygame.freetype.Font("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Italic.otf", 24)
-    
-    #stops the program when you hit the X button
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-
-    cat.movement()
-    mouse.movement(cat)
-    board.draw()
-    mouse.draw()
-    cat.draw()
-
-
-    #draws upper numbers
-    GAME_FONT.render_to(screen.win, (35, 2), "1", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (115, 2), "2", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (195, 2), "3", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (275, 2), "4", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (355, 2), "5", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (435, 2), "6", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (515, 2), "7", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (595, 2), "8", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (675, 2), "9", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (750, 2), "10", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (830, 2), "11", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (910, 2), "12", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (990, 2), "13", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1069, 2), "14", (0, 0, 0))
-    #draws vertical numbers
-    GAME_FONT.render_to(screen.win, (1107, 30), "1", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 110), "2", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 190), "3", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 270), "4", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 350), "5", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 430), "6", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 510), "7", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 590), "8", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1107, 670), "9", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1100, 750), "10", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (1100, 830), "11", (0, 0, 0))
-
-    GAME_FONT.render_to(screen.win, (330, 190), "Mouse", (0, 0, 0))
-    GAME_FONT.render_to(screen.win, (660, 750), "Cat", (0, 0, 0))
-
-    pygame.display.update()
-
-pygame.quit()
+game = Game()
+game.play()
