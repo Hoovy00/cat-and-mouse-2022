@@ -172,10 +172,7 @@ class Board(object):
     def draw(self):
         pygame.draw.rect(self.win, (COLOR_BACKGROUND), (0,0, Board.GRID_WIDTH*Board.COLUMNS, Board.GRID_HEIGHT*Board.ROWS))
         #draws the vertical lines
-        def draw_vertical_lines(num):
-            for i in range(num):                
-                pygame.draw.rect(self.win, (COLOR_BLACK), (Board.GRID_WIDTH * i,0, Board.line_WIDTH, Screen.HEIGHT))
-        draw_vertical_lines(15)
+        self.draw_vertical_lines(15)
         self.draw_horizontal_lines(12)
         #draws the walls
         def draw_walls(walls):
@@ -204,19 +201,19 @@ class Board(object):
                 [x, 5], 20, 20)
 
         draw_green_circle_on_top_of_the_screen(40)
-        draw_green_circle_on_top_of_the_screen(120)
-        draw_green_circle_on_top_of_the_screen(200)
-        draw_green_circle_on_top_of_the_screen(280)
-        draw_green_circle_on_top_of_the_screen(360)
-        draw_green_circle_on_top_of_the_screen(440)
-        draw_green_circle_on_top_of_the_screen(520)
-        draw_green_circle_on_top_of_the_screen(600)
-        draw_green_circle_on_top_of_the_screen(680)
-        draw_green_circle_on_top_of_the_screen(760)
-        draw_green_circle_on_top_of_the_screen(840)
-        draw_green_circle_on_top_of_the_screen(920)
-        draw_green_circle_on_top_of_the_screen(1000)
-        draw_green_circle_on_top_of_the_screen(1080)
+        draw_green_circle_on_top_of_the_screen(40 + 80)
+        draw_green_circle_on_top_of_the_screen(40 + (80*2))
+        draw_green_circle_on_top_of_the_screen(40 + (80*3))
+        draw_green_circle_on_top_of_the_screen(40 + (80*4))
+        draw_green_circle_on_top_of_the_screen(40 + (80*5))
+        draw_green_circle_on_top_of_the_screen(40 + (80*6))
+        draw_green_circle_on_top_of_the_screen(40 + (80*7))
+        draw_green_circle_on_top_of_the_screen(40 + (80*8))
+        draw_green_circle_on_top_of_the_screen(40 + (80*9))
+        draw_green_circle_on_top_of_the_screen(40 + (80*10))
+        draw_green_circle_on_top_of_the_screen(40 + (80*11))
+        draw_green_circle_on_top_of_the_screen(40 + (80*12))
+        draw_green_circle_on_top_of_the_screen(40 + (80*13))
 
         # the circles on the sides
         def draw_red_circle_on_side_of_the_screen(y):
@@ -224,21 +221,26 @@ class Board(object):
                 [1120, y], 20, 20)
 
         draw_red_circle_on_side_of_the_screen(40)
-        draw_red_circle_on_side_of_the_screen(120)
-        draw_red_circle_on_side_of_the_screen(200)
-        draw_red_circle_on_side_of_the_screen(280)
-        draw_red_circle_on_side_of_the_screen(360)
-        draw_red_circle_on_side_of_the_screen(440)
-        draw_red_circle_on_side_of_the_screen(520)
-        draw_red_circle_on_side_of_the_screen(600)
-        draw_red_circle_on_side_of_the_screen(680)
-        draw_red_circle_on_side_of_the_screen(760)
-        draw_red_circle_on_side_of_the_screen(840)
+        draw_red_circle_on_side_of_the_screen(40 + 80)
+        draw_red_circle_on_side_of_the_screen(40 + (80*2))
+        draw_red_circle_on_side_of_the_screen(40 + (80*3))
+        draw_red_circle_on_side_of_the_screen(40 + (80*4))
+        draw_red_circle_on_side_of_the_screen(40 + (80*5))
+        draw_red_circle_on_side_of_the_screen(40 + (80*6))
+        draw_red_circle_on_side_of_the_screen(40 + (80*7))
+        draw_red_circle_on_side_of_the_screen(40 + (80*8))
+        draw_red_circle_on_side_of_the_screen(40 + (80*9))
+        draw_red_circle_on_side_of_the_screen(40 + (80*10))
 
     def draw_horizontal_lines(self,  num):
         #draws the horizontal lines
         for i in range(num):
             pygame.draw.rect(self.win, (COLOR_BLACK), (0,Board.GRID_HEIGHT*i, Screen.WIDTH, Board.line_WIDTH))
+
+    def draw_vertical_lines(self, num):
+        for i in range(num):                
+            pygame.draw.rect(self.win, (COLOR_BLACK), (Board.GRID_WIDTH * i,0, Board.line_WIDTH, Screen.HEIGHT))
+
      
 #used to call the classes
 screen = Screen()
