@@ -4,30 +4,39 @@ import pygame.freetype
 class Game(object):
     """this class handles the base game features"""
     def __init__(self):
-        #initializes the class
+        """initializes the class"""
         pygame.init()
 
+    def draw(self):
+        board.draw()
+        walls.draw()
+        lines.draw()
+        mouse.draw()
+        cat.draw()
+        cat.draw_start_position()
+        mouse.draw_start_position()
+        score_indicators.draw()
+
+    def movement(self):
+        cat.handle_movement()
+        mouse.handle_movement()
+
+    def collisions(self):
+        mouse.handle_collision(cat)
+
     def play(self):    
-        #main game loop
+        """main game loop"""
         run = True
         while run:
             pygame.time.delay(15)
             
-            #stops the program when you hit the X button
+            """stops the program when you hit the X button"""
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-            cat.movement()
-            mouse.movement()
-            mouse.collision(cat)
-            board.draw()
-            walls.draw()
-            lines.draw()
-            mouse.draw()
-            cat.draw()
-            cat.start_point()
-            mouse.start_point()
-            score_indicators.draw()
+            self.draw()
+            self.movement()
+            self.collisions()
             pygame.display.update()
 
         pygame.quit()
@@ -35,7 +44,7 @@ class Game(object):
 class ScoreIndicator(object):
     """this creates the individual numbers and circles on the sides"""
     def __init__(self,score_indicators,label,position,color,label_location):
-        #initializes the class
+        """initializes the class"""
         self.color = color
         self.position = position
         self.score_indicators = score_indicators
@@ -43,7 +52,7 @@ class ScoreIndicator(object):
         self.label_location = label_location
 
     def draw(self):
-        #draws the circles
+        """draws the circles"""
         pygame.draw.circle(screen.win, self.color,
             self.position, 20, 20)
         self.score_indicators.GAME_FONT.render_to(screen.win, self.label_location, self.label, (0, 0, 0))
@@ -51,33 +60,27 @@ class ScoreIndicator(object):
 class ScoreIndicators(object):
     """creates the tools to make the numbers and circles on the sides"""
     def __init__(self):
-        #initializes the class
+        """initializes the class"""
         self.GAME_FONT = pygame.freetype.Font("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Italic.otf", 24)
         self.children = []
 
     def add_top(self, label, position, color, label_location):
-        #tools for the top circles and numbers
+        """tools for the top circles and numbers"""
         self.children.append( ScoreIndicator(self, label, position, color, label_location ))
 
     def add_side(self, label, position, color, label_location):
-        #tools for the side circles and numbers
+        """tools for the side circles and numbers"""
         self.children.append( ScoreIndicator(self, label, position, color, label_location ))
 
     def draw(self):
-        #draws them
+        """draws them"""
         for child in self.children:
             child.draw()
-        self.start_points()
-
-    def start_points(self):
-        #currently this does nothing, but if I remove it things won't work, I'll work on it next iteration
-        pass
-        
 
 class Screen(object):
     "creates the window that the game is played in"
     def __init__(self):
-        #initializes the game window
+        """initializes the game window"""
         self.win = pygame.display.set_mode((Screen.WIDTH, Screen.HEIGHT))
         pygame.display.set_caption("Cat and Mouse")
     """stores screen size"""
@@ -90,7 +93,7 @@ class Player(object):
     HEIGHT = 75
     VELOCITY = 5
 
-#several colors for use later
+"""several colors for use later"""
 COLOR_WHITE = (178,178,178)
 COLOR_BLACK = (0,0,0)
 COLOR_BLUE = (0,0,178)
@@ -102,17 +105,17 @@ class Mouse(object):
     """mouse player functions"""
     WIDTH = Player.WIDTH
     HEIGHT = Player.HEIGHT
-    START_X_GRID = 5
-    START_Y_GRID = 3
+    STARTING_GRID_POSITION_X = 5
+    STARTING_GRID_POSITION_Y = 3
     def __init__(self,screen):
-        self.x = (Screen.WIDTH/Board.COLUMNS*(Mouse.START_X_GRID-1)) + Board.LINE_WIDTH
-        self.y = (Screen.HEIGHT/Board.ROWS*(Mouse.START_Y_GRID-1)) + Board.LINE_WIDTH
+        self.x = (Screen.WIDTH/Board.COLUMNS*(Mouse.STARTING_GRID_POSITION_X-1)) + Board.LINE_WIDTH
+        self.y = (Screen.HEIGHT/Board.ROWS*(Mouse.STARTING_GRID_POSITION_Y-1)) + Board.LINE_WIDTH
         self.speed = Player.VELOCITY
         self.is_dead = False
         self.win = screen.win
 
-    def movement(self):
-        #handles Mouse's movement
+    def handle_movement(self):
+        """handles Mouse's movement"""
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
@@ -124,8 +127,8 @@ class Mouse(object):
         if keys[pygame.K_s]:
             self.y += self.speed
 
-    def collision(self,cat):
-        #makes the mouse "die" if it tuches the cat
+    def handle_collision(self,cat):
+        """makes the mouse "die" if it tuches the cat"""
         if self.x >= cat.x and self.x <= cat.x + Player.WIDTH and self.y >= cat.y and self.y <= cat.y + Player.HEIGHT:
             self.is_dead = True
 
@@ -138,29 +141,28 @@ class Mouse(object):
                self.speed = 0
     
     def draw(self):
-        #draws the mouse
-        pygame.draw.rect(self.win, (COLOR_WHITE), (self.x, self.y, Mouse.WIDTH, Mouse.HEIGHT))
+        """draws the mouse"""
+        pygame.draw.rect(self.win, COLOR_WHITE, (self.x, self.y, Mouse.WIDTH, Mouse.HEIGHT))
     
-    def start_point(self):
-        #this adds the text "mouse" to indicate where the mouse is supposed to start
-        score_indicators.GAME_FONT.render_to(screen.win, ((self.START_X_GRID*66), (self.START_Y_GRID*65)), "Mouse", (0, 0, 0))
+    def draw_start_position(self):
+        """this adds the text "mouse" to indicate where the mouse is supposed to start"""
+        score_indicators.GAME_FONT.render_to(screen.win, ((self.STARTING_GRID_POSITION_X*66), (self.STARTING_GRID_POSITION_Y*65)), "Mouse", (0, 0, 0))
 
 class Cat(object):
     """cat player functions"""
     WIDTH = Player.WIDTH
     HEIGHT = Player.HEIGHT
-    START_X_GRID = 9
-    START_Y_GRID = 10
+    STARTING_GRID_POSITION_X = 9
+    STARTING_GRID_POSITION_Y = 10
     def __init__(self,screen):
-        #initializes the cat
-        self.x = (Screen.WIDTH/Board.COLUMNS*(Cat.START_X_GRID-1)) + Board.LINE_WIDTH
-        self.y = (Screen.HEIGHT/Board.ROWS*(Cat.START_Y_GRID-1)) + Board.LINE_WIDTH
+        """initializes the cat"""
+        self.x = (Screen.WIDTH/Board.COLUMNS*(Cat.STARTING_GRID_POSITION_X-1)) + Board.LINE_WIDTH
+        self.y = (Screen.HEIGHT/Board.ROWS*(Cat.STARTING_GRID_POSITION_Y-1)) + Board.LINE_WIDTH
         self.speed = Player.VELOCITY
         self.win = screen.win
 
-    # handles movement
-    def movement(self):
-        
+    def handle_movement(self):
+        """handles movement"""
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.x -= self.speed
@@ -172,16 +174,16 @@ class Cat(object):
             self.y += self.speed
 
     def draw(self):
-        #draws the cat
-        pygame.draw.rect(self.win, (COLOR_WHITE), (self.x, self.y, Cat.WIDTH, Cat.HEIGHT))
+        """draws the cat"""
+        pygame.draw.rect(self.win, COLOR_WHITE, (self.x, self.y, Cat.WIDTH, Cat.HEIGHT))
      
-    # returns Cat's x and y
-    def location(self):
+    def get_location(self):
+        """returns Cat's x and y"""
         return (self.x, self.y)
 
-    def start_point(self):
-        #this adds the text "cat" to indicate where the cat is supposed to start
-        score_indicators.GAME_FONT.render_to(screen.win, ((self.START_X_GRID*74), (self.START_Y_GRID*75)), "Cat", (0, 0, 0))
+    def draw_start_position(self):
+        """this adds the text "cat" to indicate where the cat is supposed to start"""
+        score_indicators.GAME_FONT.render_to(screen.win, ((self.STARTING_GRID_POSITION_X*74), (self.STARTING_GRID_POSITION_Y*75)), "Cat", (0, 0, 0))
 
 class Board(object):
     """creates the game area"""
@@ -190,48 +192,48 @@ class Board(object):
     ROWS = 11
     GRID_HEIGHT = int(Screen.HEIGHT/ROWS)
     GRID_WIDTH = int(Screen.WIDTH/COLUMNS)
-    #initializes the game area
     def __init__(self):
+        """initializes the game area"""
         self.win = screen.win
 
-    #draws the game board
     def draw(self):
-        pygame.draw.rect(self.win, (COLOR_BACKGROUND), (0,0, Board.GRID_WIDTH*Board.COLUMNS, Board.GRID_HEIGHT*Board.ROWS))
+        """draws the game board"""
+        pygame.draw.rect(self.win, COLOR_BACKGROUND, (0,0, Board.GRID_WIDTH*Board.COLUMNS, Board.GRID_HEIGHT*Board.ROWS))
 
 class Walls(object):
     """everything to do with the walls"""
 
     def __init__(self):
-        #initalizes the walls
+        """initalizes the walls"""
         self.win = screen.win
 
     def draw(self):
-        #draws the walls
+        """draws the walls"""
         width = Board.GRID_WIDTH - Board.LINE_WIDTH
         height = Board.GRID_HEIGHT - Board.LINE_WIDTH
         for x,y in wall_location:
-            pygame.draw.rect(self.win, (COLOR_BLUE), (Board.GRID_WIDTH*x + Board.LINE_WIDTH, Board.GRID_HEIGHT*y + Board.LINE_WIDTH, width, height))
+            pygame.draw.rect(self.win, COLOR_BLUE, (Board.GRID_WIDTH*x + Board.LINE_WIDTH, Board.GRID_HEIGHT*y + Board.LINE_WIDTH, width, height))
 
 
 class Lines(object):
     def __init__(self):
         self.win = screen.win    
     def draw(self):
-        #draws the lines
+        """draws the lines"""
         self.draw_vertical_lines(15)
         self.draw_horizontal_lines(12)
 
     def draw_horizontal_lines(self,  num):
-        #tells the draw function, a part of what to draw
+        """tells the draw function what part to draw"""
         for i in range(num):
-            pygame.draw.rect(self.win, (COLOR_BLACK), (0,Board.GRID_HEIGHT*i, Screen.WIDTH, Board.LINE_WIDTH))
+            pygame.draw.rect(self.win, COLOR_BLACK, (0,Board.GRID_HEIGHT*i, Screen.WIDTH, Board.LINE_WIDTH))
 
     def draw_vertical_lines(self, num):
-        #tells the draw function, a part of what to draw
+        """tells the draw function what part to draw"""
         for i in range(num):                
-            pygame.draw.rect(self.win, (COLOR_BLACK), (Board.GRID_WIDTH * i,0, Board.LINE_WIDTH, Screen.HEIGHT))
+            pygame.draw.rect(self.win, COLOR_BLACK, (Board.GRID_WIDTH * i,0, Board.LINE_WIDTH, Screen.HEIGHT))
   
-#used to call the classes
+"""used to call the classes"""
 screen = Screen()
 cat = Cat(screen)
 mouse = Mouse(screen)
