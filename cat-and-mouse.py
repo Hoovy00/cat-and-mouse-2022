@@ -7,24 +7,39 @@ class Game(object):
         """initializes the class"""
         pygame.init()
 
+        self.game_objects = []
+
+    def add_game_objects(self,*game_objects):
+        for game_object in game_objects:
+            self.add_game_object(game_object)
+
+    def add_game_object(self,game_object):
+        self.game_objects.append(game_object)
+
+    def get_game_objects_with_attribute(self,attribute_name):
+        return [ game_object for game_object in self.game_objects if hasattr(game_object, attribute_name) ]
+
+        
+
     def draw(self):
-        board.draw()
-        walls.draw()
-        lines.draw()
-        mouse.draw()
-        cat.draw()
-        cat.draw_start_position()
-        mouse.draw_start_position()
-        score_indicators.draw()
+        """used to store things that need to be drawn"""
+        drawables = self.get_game_objects_with_attribute("draw")
+        for drawable in drawables:
+            drawable.draw()
 
     def movement(self):
-        cat.handle_movement()
-        mouse.handle_movement()
+        """used to store things that need to move"""
+        movables = self.get_game_objects_with_attribute("movement")
+        for movable in movables:
+            movable.movement()
 
     def collisions(self):
-        mouse.handle_collision(cat)
+        """used to store things that need to collide"""
+        collidables = self.get_game_objects_with_attribute("collisions")
+        for collidable in collidables:
+            collidable.handle_collision()
 
-    def play(self):    
+    def play(self):
         """main game loop"""
         run = True
         while run:
@@ -93,7 +108,7 @@ class Player(object):
     HEIGHT = 75
     VELOCITY = 5
 
-"""several colors for use later"""
+#several colors for use later
 COLOR_WHITE = (178,178,178)
 COLOR_BLACK = (0,0,0)
 COLOR_BLUE = (0,0,178)
@@ -143,6 +158,7 @@ class Mouse(object):
     def draw(self):
         """draws the mouse"""
         pygame.draw.rect(self.win, COLOR_WHITE, (self.x, self.y, Mouse.WIDTH, Mouse.HEIGHT))
+        self.draw_start_position()
     
     def draw_start_position(self):
         """this adds the text "mouse" to indicate where the mouse is supposed to start"""
@@ -176,6 +192,7 @@ class Cat(object):
     def draw(self):
         """draws the cat"""
         pygame.draw.rect(self.win, COLOR_WHITE, (self.x, self.y, Cat.WIDTH, Cat.HEIGHT))
+        self.draw_start_position()
      
     def get_location(self):
         """returns Cat's x and y"""
@@ -199,29 +216,8 @@ class Board(object):
     def draw(self):
         """draws the game board"""
         pygame.draw.rect(self.win, COLOR_BACKGROUND, (0,0, Board.GRID_WIDTH*Board.COLUMNS, Board.GRID_HEIGHT*Board.ROWS))
-
-class Walls(object):
-    """everything to do with the walls"""
-
-    def __init__(self):
-        """initalizes the walls"""
-        self.win = screen.win
-
-    def draw(self):
-        """draws the walls"""
-        width = Board.GRID_WIDTH - Board.LINE_WIDTH
-        height = Board.GRID_HEIGHT - Board.LINE_WIDTH
-        for x,y in wall_location:
-            pygame.draw.rect(self.win, COLOR_BLUE, (Board.GRID_WIDTH*x + Board.LINE_WIDTH, Board.GRID_HEIGHT*y + Board.LINE_WIDTH, width, height))
-
-
-class Lines(object):
-    def __init__(self):
-        self.win = screen.win    
-    def draw(self):
-        """draws the lines"""
-        self.draw_vertical_lines(15)
-        self.draw_horizontal_lines(12)
+        self.draw_vertical_lines(Board.COLUMNS+1)
+        self.draw_horizontal_lines(Board.ROWS+1)
 
     def draw_horizontal_lines(self,  num):
         """tells the draw function what part to draw"""
@@ -232,13 +228,27 @@ class Lines(object):
         """tells the draw function what part to draw"""
         for i in range(num):                
             pygame.draw.rect(self.win, COLOR_BLACK, (Board.GRID_WIDTH * i,0, Board.LINE_WIDTH, Screen.HEIGHT))
+
+class Wall(object):
+    """everything to do with the walls"""
+
+    def __init__(self,x,y):
+        """initalizes the walls"""
+        self.win = screen.win
+        self.x = x
+        self.y = y
+
+    def draw(self):
+        """draws the walls"""
+        width = Board.GRID_WIDTH - Board.LINE_WIDTH
+        height = Board.GRID_HEIGHT - Board.LINE_WIDTH
+        pygame.draw.rect(self.win, COLOR_BLUE, (Board.GRID_WIDTH*self.x + Board.LINE_WIDTH, Board.GRID_HEIGHT*self.y + Board.LINE_WIDTH, width, height))
+
   
-"""used to call the classes"""
+#used to call the classes
 screen = Screen()
 cat = Cat(screen)
 mouse = Mouse(screen)
-walls = Walls()
-lines = Lines()
 board = Board()
 game = Game()
 score_indicators = ScoreIndicators()
@@ -256,6 +266,10 @@ wall_location = [
     (3, 9), (9, 9), (10, 9), 
     (0, 10), (6, 10), (7, 10), (13, 10)
 ]
+game.add_game_objects(board)
+for x,y in wall_location:
+    game.add_game_object(Wall(x,y))
+game.add_game_objects(score_indicators,cat,mouse)
 
 score_indicators.add_top("1", (40, 5), COLOR_GREEN, (35, 2) )
 score_indicators.add_top("2", (120, 5), COLOR_GREEN, (115, 2) )
